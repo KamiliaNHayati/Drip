@@ -8,6 +8,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {IConnectOracle} from "./interfaces/IConnectOracle.sol";
 import {IDripPool} from "./interfaces/IDripPool.sol";
 import {IDripToken} from "./interfaces/IDripToken.sol";
+import {IGhostRegistry} from "./interfaces/IGhostRegistry.sol";
 
 /// @title DripVault — Social yield vault (EIP-1167 clone)
 /// @notice Deposits into DripPool, auto-compounds yield via delta skim, tracks creator fees.
@@ -25,12 +26,16 @@ contract DripVault is OwnableUpgradeable, ReentrancyGuard {
     event DefensiveModeExited(uint256 price);
     event CreatorFeeAccrued(address indexed creator, uint256 amount);
     event EmergencySynced(uint256 oldPoolShares, uint256 newPoolShares);
+    event GhostDelegated(address indexed ghost, address indexed registry);
+    event GhostUndelegated();
 
     // ─── Errors ────────────────────────────────────────────────────────
     error ZeroAmount();
     error InsufficientShares();
     error VaultPaused();
     error NotCreator();
+    error InsufficientDelegationFee();
+    error TransferFailed();
 
     // ─── Storage ───────────────────────────────────────────────────────
     address public creator;
@@ -59,6 +64,10 @@ contract DripVault is OwnableUpgradeable, ReentrancyGuard {
     uint256 public recoveryThresholdBps;   // default 10200 (102%)
     bool public defensiveMode;
     bool public paused;
+
+    // Ghost delegation (optional — set by creator)
+    address public delegatedGhost;
+    address public ghostRegistry;
 
     // ─── Initialize ────────────────────────────────────────────────────
 
@@ -242,21 +251,28 @@ contract DripVault is OwnableUpgradeable, ReentrancyGuard {
         uint256 netCreatorFee = creatorFee - dripFee;
         uint256 redeposit = withdrawn - creatorFee;
 
-        // Step 10: Distribute fees
+        // Step 10: Ghost stats tracking (no fee deduction — rewards are leaderboard-only for MVP)
+        if (delegatedGhost != address(0) && msg.sender == delegatedGhost && ghostRegistry != address(0)) {
+            try IGhostRegistry(ghostRegistry).recordCompound(msg.sender, profit) returns (uint256) {
+            } catch {
+            }
+        }
+
+        // Step 11: Distribute fees
         if (dripFee > 0) {
             asset.safeTransfer(treasury, dripFee);
         }
         creatorYieldAccrued += netCreatorFee;
         // netCreatorFee stays in vault's token balance — not re-deposited
 
-        // Step 11: Re-deposit remainder into pool
+        // Step 12: Re-deposit remainder into pool
         if (redeposit > 0) {
             asset.forceApprove(dripPool, redeposit);
             uint256 newPoolShares = IDripPool(dripPool).supply(redeposit);
             poolShares += newPoolShares;
         }
 
-        // Step 12: Update tracking
+        // Step 13: Update tracking
         lastTotalAssets = totalAssets();
 
         emit Compounded(profit, creatorFee, dripFee, redeposit);
@@ -272,6 +288,31 @@ contract DripVault is OwnableUpgradeable, ReentrancyGuard {
         emit CreatorFeeAccrued(creator, amount);
     }
 
+    /// @notice Creator sets a delegated ghost and registry for automated compounding
+    /// @param ghost Ghost operator address (set to address(0) to undelegate)
+    /// @param registry GhostRegistry contract address
+    /// @dev Delegation fee: 5 INIT paid to treasury (per RULES.md). No fee for undelegation.
+    function setDelegatedGhost(address ghost, address registry) external payable {
+        if (msg.sender != creator) revert NotCreator();
+        if (ghost != address(0)) {
+            uint256 delegationFee = 5 ether;
+            if (msg.value < delegationFee) revert InsufficientDelegationFee();
+            (bool s, ) = payable(treasury).call{value: delegationFee}("");
+            if (!s) revert TransferFailed();
+            if (msg.value > delegationFee) {
+                (bool r, ) = payable(msg.sender).call{value: msg.value - delegationFee}("");
+                if (!r) revert TransferFailed();
+            }
+        }
+        delegatedGhost = ghost;
+        ghostRegistry = registry;
+        if (ghost != address(0)) {
+            emit GhostDelegated(ghost, registry);
+        } else {
+            emit GhostUndelegated();
+        }
+    }
+
     /// @notice Creator sets defensive threshold
     function setDefensiveThreshold(uint256 n) external {
         if (msg.sender != creator) revert NotCreator();
@@ -285,6 +326,20 @@ contract DripVault is OwnableUpgradeable, ReentrancyGuard {
         emit EmergencySynced(poolShares, actual);
         poolShares = actual;
         lastTotalAssets = totalAssets();
+    }
+
+    /// @notice Update treasury address (owner = vault creator via OwnableUpgradeable)
+    function setTreasuryAddress(address _treasury) external onlyOwner {
+        treasury = _treasury;
+    }
+
+    /// @notice Withdraw accumulated protocol/drip fees held in this vault to treasury
+    function withdrawFees() external onlyOwner {
+        uint256 bal = asset.balanceOf(address(this));
+        uint256 owed = creatorYieldAccrued;
+        if (bal <= owed) return;
+        uint256 withdrawable = bal - owed;
+        asset.safeTransfer(treasury, withdrawable);
     }
 
     /// @notice Pause deposits/withdrawals (owner only)

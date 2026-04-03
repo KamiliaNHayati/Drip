@@ -431,7 +431,7 @@ contract DripPoolTest is Test {
         assertGt(previewAmount, 99 ether);
     }
 
-    function test_healthFactor_noDebt() public {
+    function test_healthFactor_noDebt() public view {
         assertEq(pool.healthFactor(alice), type(uint256).max);
     }
 
@@ -524,5 +524,245 @@ contract DripPoolTest is Test {
         vm.prank(bob);
         pool.repay(100 ether);
         assertEq(pool.getActualDebt(bob), 0);
+    }
+
+
+    // ─── Accrue Edge Cases ────────────────────────────────────────────
+
+    function test_accrueInterest_noElapsedTime() public {
+        vm.prank(alice);
+        pool.supply(100 ether);
+
+        vm.prank(bob);
+        pool.addCollateral(150 ether);
+        vm.prank(bob);
+        pool.borrow(50 ether);
+
+        uint256 depositsBefore = pool.totalDeposits();
+        // Accrue again in the same block — no new interest
+        pool.accrueInterest();
+        assertEq(pool.totalDeposits(), depositsBefore);
+    }
+
+    function test_accrueInterest_noDebt() public {
+        vm.prank(alice);
+        pool.supply(100 ether);
+
+        uint256 depositsBefore = pool.totalDeposits();
+        vm.warp(block.timestamp + 1 days);
+        pool.accrueInterest();
+        // No borrowing = no interest
+        assertEq(pool.totalDeposits(), depositsBefore);
+    }
+
+    // ─── View Functions ───────────────────────────────────────────────
+
+    function test_getActualDebt_withInterest() public {
+        vm.prank(alice);
+        pool.supply(100 ether);
+
+        vm.prank(bob);
+        pool.addCollateral(150 ether);
+        vm.prank(bob);
+        pool.borrow(50 ether);
+
+        assertEq(pool.getActualDebt(bob), 50 ether);
+
+        vm.warp(block.timestamp + 365 days);
+        pool.accrueInterest();
+
+        // Debt should have grown with interest
+        assertGt(pool.getActualDebt(bob), 50 ether);
+    }
+
+    // ─── Admin ────────────────────────────────────────────────────────
+
+    function test_setReserveFactor() public {
+        pool.setReserveFactor(2000); // 20%
+        assertEq(pool.reserveFactorBps(), 2000);
+    }
+
+    function test_setReserveFactor_tooHigh_reverts() public {
+        vm.expectRevert(DripPool.InvalidParameter.selector);
+        pool.setReserveFactor(3001);
+    }
+
+    function test_setCollateralFactor() public {
+        pool.setCollateralFactor(8000); // 80%
+        assertEq(pool.collateralFactorBps(), 8000);
+    }
+
+    function test_setCollateralFactor_tooHigh_reverts() public {
+        vm.expectRevert(DripPool.InvalidParameter.selector);
+        pool.setCollateralFactor(9501);
+    }
+
+    function test_setTreasuryAddress() public {
+        address newTreasury = makeAddr("newTreasury");
+        pool.setTreasuryAddress(newTreasury);
+        assertEq(pool.treasury(), newTreasury);
+    }
+
+    function test_setTreasuryAddress_zero_reverts() public {
+        vm.expectRevert(DripPool.InvalidParameter.selector);
+        pool.setTreasuryAddress(address(0));
+    }
+
+    function test_deactivateEmergency() public {
+        pool.activateEmergency();
+        assertTrue(pool.emergencyMode());
+
+        pool.deactivateEmergency();
+        assertFalse(pool.emergencyMode());
+    }
+
+    function test_borrow_emergencyMode_reverts() public {
+        vm.prank(alice);
+        pool.supply(100 ether);
+
+        vm.prank(bob);
+        pool.addCollateral(200 ether);
+
+        pool.activateEmergency();
+
+        vm.expectRevert(DripPool.EmergencyActive.selector);
+        vm.prank(bob);
+        pool.borrow(50 ether);
+    }
+
+    function test_constructor_InvalidParameters() public {
+        // Line 69: Test constructor revert if asset is address(0)
+        vm.expectRevert(DripPool.InvalidParameter.selector);
+        new DripPool(address(0), treasury, 800, 1000, 1000, 5000, 7500);
+
+        // Line 69: Test constructor revert if treasury is address(0)
+        vm.expectRevert(DripPool.InvalidParameter.selector);
+        new DripPool(address(token), address(0), 800, 1000, 1000, 5000, 7500);
+    }
+
+    function test_withdrawFees_ZeroAmount() public {
+        // Line 105: Test withdrawFees revert when reserves are 0
+        vm.prank(address(this)); // Owner is the test contract
+        vm.expectRevert(DripPool.ZeroAmount.selector);
+        pool.withdrawFees();
+    }
+
+        function test_withdraw_InsufficientLiquidity() public {
+        // Line 159: Test withdraw revert when liquidity is insufficient
+        // We need: withdrawal amount > available cash
+        // available cash = balance - reserves.
+        
+        // 1. Alice supplies 100 ether
+        vm.prank(alice);
+        pool.supply(100 ether);
+
+        // 2. Bob adds collateral and borrows heavily
+        vm.prank(bob);
+        pool.addCollateral(150 ether);
+        vm.prank(bob);
+        pool.borrow(112 ether); // 75% LTV (150 * 0.75 = 112.5)
+
+        // At this point:
+        // Balance = 100 (Alice) + 150 (Bob Collateral) - 112 (Bob Borrow) = 138 ether
+        // Available = 138 ether (reserves are 0)
+        // Alice's claim is ~100 ether. 100 < 138, so withdraw would pass.
+        // We need to increase Alice's claim AND decrease available cash.
+
+        // 3. Warp time to accrue interest.
+        // Interest increases totalDeposits (Alice's claim grows).
+        // Interest increases protocolReserves (Available cash decreases because reserves are locked).
+        vm.warp(block.timestamp + 365 days * 10); // 10 years
+        pool.accrueInterest();
+
+        // 4. Alice tries to withdraw her full claim.
+        // The amount calculated will be significantly higher than the cash available in the pool.
+        uint256 aliceShares = pool.lenderShares(alice);
+        vm.prank(alice);
+        vm.expectRevert(DripPool.InsufficientLiquidity.selector);
+        pool.withdraw(aliceShares);
+    }
+
+    function test_borrow_ZeroAmount() public {
+        // Line 173: Test borrow revert for 0 amount
+        vm.prank(bob);
+        vm.expectRevert(DripPool.ZeroAmount.selector);
+        pool.borrow(0);
+    }
+
+    function test_repay_ZeroAmount() public {
+        // Line 195: Test repay revert for 0 amount
+        vm.prank(bob);
+        vm.expectRevert(DripPool.ZeroAmount.selector);
+        pool.repay(0);
+    }
+
+    function test_addCollateral_ZeroAmount() public {
+        // Line 214: Test addCollateral revert for 0 amount
+        vm.prank(bob);
+        vm.expectRevert(DripPool.ZeroAmount.selector);
+        pool.addCollateral(0);
+    }
+
+    function test_removeCollateral_ZeroAmount() public {
+        // Line 223: Test removeCollateral revert for 0 amount
+        vm.prank(bob);
+        vm.expectRevert(DripPool.ZeroAmount.selector);
+        pool.removeCollateral(0);
+    }
+
+    function test_liquidate_CollateralSurplus() public {
+        // Line 260: Test liquidation where collateral > debt + penalty
+        // This triggers the branch returning remaining collateral to the borrower
+
+        // 1. Setup liquidity
+        vm.prank(alice);
+        pool.supply(100 ether);
+
+        // 2. Bob borrows near max. Collateral 100, Borrow 74 (Max 75)
+        vm.prank(bob);
+        pool.addCollateral(100 ether);
+        vm.prank(bob);
+        pool.borrow(74 ether);
+
+        // 3. Warp time to make position unhealthy
+        // 365 days at 8% APY adds ~6 ether interest. Debt ~80. Max borrow 75.
+        vm.warp(block.timestamp + 365 days);
+        pool.accrueInterest();
+
+        // Verify unhealthy
+        assertLt(pool.healthFactor(bob), 10000);
+
+        uint256 bobBalBefore = token.balanceOf(bob);
+
+        // 4. Liquidate
+        vm.prank(liquidator);
+        pool.liquidate(bob);
+
+        // 5. Verify Bob received excess collateral
+        // Debt ~80, Penalty ~8. Total cost ~88. Collateral 100. Excess ~12.
+        assertGt(token.balanceOf(bob), bobBalBefore, "Bob should receive excess collateral");
+    }
+
+    function test_previewSupply_ZeroShares() public {
+        // Line 301: Test previewSupply when totalShares == 0
+        // Branch: amount <= 1000 (returns 0)
+        uint256 shares = pool.previewSupply(500);
+        assertEq(shares, 0, "Should return 0 for amount <= 1000");
+
+        // Branch: amount > 1000 (returns amount - 1000)
+        shares = pool.previewSupply(2000);
+        assertEq(shares, 1000, "Should return amount - 1000");
+    }
+
+    function test_previewWithdraw_ZeroShares() public {
+        // Line 309: Test previewWithdraw when totalShares == 0
+        uint256 amount = pool.previewWithdraw(100);
+        assertEq(amount, 0, "Should return 0 when totalShares is 0");
+    }
+
+    function test_utilizationRate_ZeroDeposits() public {
+        // Line 315: Test utilizationRate when totalDeposits == 0
+        uint256 rate = pool.utilizationRate();
+        assertEq(rate, 0, "Utilization should be 0 when deposits are 0");
     }
 }

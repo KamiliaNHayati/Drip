@@ -154,6 +154,10 @@ contract DripPool is Ownable, ReentrancyGuard {
         if (shares > lenderShares[msg.sender]) revert InsufficientShares();
 
         amount = shares * totalDeposits / totalShares;
+
+        uint256 available = asset.balanceOf(address(this)) - protocolReserves;
+        if (amount > available) revert InsufficientLiquidity();
+
         lenderShares[msg.sender] -= shares;
         totalShares -= shares;
         totalDeposits -= amount;
@@ -283,18 +287,27 @@ contract DripPool is Ownable, ReentrancyGuard {
 
     // ─── View ──────────────────────────────────────────────────────────
 
+    /// @dev Simulate what totalDeposits would be after accruing pending interest
+    function _simulatedTotalDeposits() internal view returns (uint256) {
+        uint256 elapsed = block.timestamp - lastAccrualTimestamp;
+        if (elapsed == 0 || totalBorrowed == 0) return totalDeposits;
+        uint256 totalInterest = totalBorrowed * interestRateBps * elapsed / (10000 * 365 days);
+        uint256 protocolCut = totalInterest * reserveFactorBps / 10000;
+        return totalDeposits + (totalInterest - protocolCut);
+    }
+
     /// @notice Preview how many shares a supply of `amount` would return
     function previewSupply(uint256 amount) external view returns (uint256 shares) {
         if (totalShares == 0) {
             return amount > 1000 ? amount - 1000 : 0;
         }
-        shares = amount * totalShares / totalDeposits;
+        shares = amount * totalShares / _simulatedTotalDeposits();
     }
 
     /// @notice Preview how many assets `shares` would return on withdrawal
     function previewWithdraw(uint256 shares) external view returns (uint256 amount) {
         if (totalShares == 0) return 0;
-        amount = shares * totalDeposits / totalShares;
+        amount = shares * _simulatedTotalDeposits() / totalShares;
     }
 
     /// @notice Current utilization rate in bps (10000 = 100%)

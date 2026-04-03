@@ -7,7 +7,8 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 
 /// @title DripToken — ERC20 receipt token for DripVault (EIP-1167 clone)
 /// @notice Minted on deposit, burned on withdraw. Only the vault can mint/burn.
-/// @dev Uses OwnableUpgradeable for clone compatibility. ReentrancyGuard v5 uses transient storage.
+/// @dev OZ v5 ReentrancyGuard uses transient storage (EIP-1153) — no init needed, safe for clones.
+///      Requires target chain to support EIP-1153 (Initia supports Dencun).
 contract DripToken is ERC20Upgradeable, OwnableUpgradeable, ReentrancyGuard {
 
     // ─── Errors ────────────────────────────────────────────────────────
