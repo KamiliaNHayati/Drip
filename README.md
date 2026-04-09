@@ -37,8 +37,8 @@ Drip is a DeFi protocol where users deposit INIT into managed vaults, earn yield
 
 | | |
 |---|---|
-| **Live Demo** | _coming soon_ |
-| **Testnet Explorer** | _coming soon_ |
+| **Live Demo** | https://drip-xi-seven.vercel.app/ |
+| **Testnet Explorer** | [Initia Scan (evm-1)](https://scan.testnet.initia.xyz/evm-1/evm-contracts/0x9D8d7DbEccD15438111E0D162caf2BAF1C9B1D61/overview) |
 | **Hackathon** | INITIATE: The Initia Hackathon (Season 1) |
 
 ## 🏗️ Architecture
@@ -149,6 +149,8 @@ Chain ID: `2124225178762456` · RPC: `https://jsonrpc-evm-1.anvil.asia-southeast
 | Contract | Address |
 |----------|---------|
 | DripPool | `0x2E97f225dcC77780bB62059668144F64dfF5eF04` |
+| DripToken (impl) | `0xC5404DFF75F7aFc6C2d6c53c39B1965FD86A6B58` |
+| DripVault (impl) | `0x31fAa0FAFCbF2cEa1CE89DD28f2b71d94dB442aC` |
 | VaultFactory | `0x9D8d7DbEccD15438111E0D162caf2BAF1C9B1D61` |
 | CompetitionManager | `0x519Bd4777f72d41dE47FD1490E099f12b46A2Cb5` |
 | BattleManager | `0xa44C796f39955daDbA335f990E44cACa412D596C` |
