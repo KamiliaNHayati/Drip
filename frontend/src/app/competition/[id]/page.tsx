@@ -62,15 +62,14 @@ export default function CompetitionPage() {
           {/* Right Column: Panel & Actions (Takes up 4/12 cols on desktop) */}
           <div className="lg:col-span-4 sticky top-32">
             <CompetitionPanel 
-              id={mockCompetition.id}
-              entryFee={mockCompetition.entryFee}
               status={mockCompetition.status}
               endTime={mockCompetition.endTime}
               participantCount={mockCompetition.participantCount}
-              isEntered={mockCompetition.isEntered}
-              canSettle={mockCompetition.canSettle}
-              /* Note: if your actual CompetitionPanel combined Leaderboard into itself like in my previous prompt, 
-                 you may only need to render CompetitionPanel here. I've left both to match your provided code structure! */
+              leaderboard={mockCompetition.participants.map(p => ({
+                address: p.address,
+                username: null,
+                growthBps: p.growthBps,
+              }))}
             />
           </div>
 
