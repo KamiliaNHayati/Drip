@@ -1,0 +1,74 @@
+.battle-card {
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.battle-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(178, 75, 243, 0.15);
+  border-color: rgba(178, 75, 243, 0.3);
+}
+
+.battle-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.battle-side {
+  flex: 1;
+  text-align: center;
+}
+
+.team-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.battle-vs {
+  padding: 0 12px;
+  text-transform: italic;
+}
+
+.vs-text {
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+.battle-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.battle-wager, .battle-time {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.battle-time {
+  text-align: right;
+}
+
+.info-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.battle-cta {
+  text-align: center;
+  margin-top: auto;
+  display: block;
+}

@@ -1,0 +1,42 @@
+.squads-page {
+  padding-top: 40px;
+  min-height: calc(100vh - 200px);
+}
+
+.squads-header {
+  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.squads-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 32px;
+}
+
+.squads-right {
+  height: max-content;
+}
+
+.squad-form-box {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.squad-form-box h3 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+@media (max-width: 900px) {
+  .squads-layout {
+    grid-template-columns: 1fr;
+  }
+}

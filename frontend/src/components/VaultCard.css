@@ -1,0 +1,83 @@
+.vault-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.vault-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 229, 255, 0.15);
+  border-color: rgba(0, 229, 255, 0.3);
+}
+
+.vault-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.new-badge {
+  background: rgba(178, 75, 243, 0.2);
+  color: #d8b4fe;
+  border: 1px solid rgba(178, 75, 243, 0.4);
+}
+
+.vault-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vault-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.vault-creator {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.vault-stats {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.vault-cta {
+  text-align: center;
+  margin-top: auto;
+  display: block;
+  text-decoration: none;
+}

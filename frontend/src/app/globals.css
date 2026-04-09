@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Variables ─────────────────────────────────────────── */
+:root {
+  --bg-primary: #000000;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-hover: rgba(255, 255, 255, 0.07);
+  --cyan: #3b82f6;
+  --purple: #7c3aed;
+  --gradient-accent: linear-gradient(135deg, var(--cyan), var(--purple));
+  --glow-cyan: 0 0 30px rgba(59, 130, 246, 0.4);
+  --glow-purple: 0 0 30px rgba(124, 58, 237, 0.4);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.5);
+  --text-accent: var(--cyan);
+  --border-glass: 1px solid rgba(255, 255, 255, 0.08);
+  --border-active: 1px solid var(--cyan);
+  --radius-sm: 9999px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+}
+
+/* ─── Base (Typography & Reset) ─────────────────────────────── */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #000000;
+    color: var(--text-primary);
+    /* Sets the clean Plus Jakarta Sans as the default for everything */
+    font-family: var(--font-body), sans-serif;
+    overflow-x: hidden;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hijacks all headings to use the bold, geometric Outfit font */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), sans-serif;
+  }
+
+  /* Utility class to force the display font if Tailwind tries to override */
+  .font-serif {
+    font-family: var(--font-display), sans-serif !important;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+
+  input {
+    background: rgba(0, 0, 0, 0.3);
+    border: var(--border-glass);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+
+  input:focus {
+    outline: none;
+    border: var(--border-active);
+    box-shadow: 0 0 0 1px var(--cyan);
+  }
+}
+
+/* ─── Glassmorphism ─────────────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────── */
+.btn-primary {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: rgba(255, 255, 255, 0.88);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.25);
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 500;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Text Utilities ────────────────────────────────────────── */
+.text-gradient {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+/* ─── Layout Helpers ────────────────────────────────────────── */
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 48px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .section-container {
+    padding: 40px 20px;
+  }
+}

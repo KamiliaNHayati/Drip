@@ -1,0 +1,86 @@
+.ghosts-page {
+  padding-top: 40px;
+  min-height: calc(100vh - 200px);
+}
+
+.ghosts-header {
+  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.ghosts-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 32px;
+}
+
+.ghosts-sidebar {
+  padding: 24px;
+  height: max-content;
+}
+
+.ghosts-sidebar h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+}
+
+.register-box, .my-stats {
+  margin-top: 24px;
+}
+
+.my-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.stat-row span:last-child {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Reuse leaderboard stuff */
+.ghosts-main .leaderboard-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.ghosts-main .table-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 120px;
+  padding: 12px 16px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 8px;
+}
+
+.ghosts-main .table-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 120px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  align-items: center;
+  transition: background 0.2s;
+}
+
+@media (max-width: 900px) {
+  .ghosts-layout {
+    grid-template-columns: 1fr;
+  }
+}
