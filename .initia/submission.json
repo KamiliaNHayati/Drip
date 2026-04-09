@@ -1,0 +1,12 @@
+{
+  "project_name": "Drip",
+  "repo_url": "https://github.com/KamiliaNHayati/Drip",
+  "commit_sha": "UPDATE_AFTER_FINAL_PUSH",
+  "rollup_chain_id": "evm-1",
+  "deployed_address": "0x9D8d7DbEccD15438111E0D162caf2BAF1C9B1D61",
+  "vm": "evm",
+  "native_feature": "auto-signing",
+  "core_logic_path": "contracts/src/DripVault.sol",
+  "native_feature_frontend_path": "frontend/src/app/vault/[address]/page.tsx",
+  "demo_video_url": "https://youtu.be/rFdOTHd_KoA"
+}
