@@ -6,8 +6,9 @@ import { useInterwovenKit } from '@initia/interwovenkit-react';
 import { parseEther } from 'viem';
 
 import { SquadManagerABI, SquadManagerAddress } from '@/lib/contracts';
+import { DRIP_CHAIN_ID } from '@/lib/chain';
 
-const TARGET_CHAIN_ID = 2124225178762456;
+const TARGET_CHAIN_ID = DRIP_CHAIN_ID;
 
 export default function SquadsPage() {
   const { isConnected } = useInterwovenKit();

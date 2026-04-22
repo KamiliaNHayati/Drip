@@ -9,12 +9,13 @@ import DefensiveStatus from '@/components/DefensiveStatus';
 import DepositForm from '@/components/DepositForm';
 import WithdrawForm from '@/components/WithdrawForm';
 import { DripVaultABI, GhostRegistryAddress, GhostRegistryABI, INIT_TOKEN } from '@/lib/contracts';
+import { DRIP_RPC_URL, DRIP_CHAIN_ID } from '@/lib/chain';
 
 const publicClient = createPublicClient({
-  transport: http('https://jsonrpc-evm-1.anvil.asia-southeast.initia.xyz'),
+  transport: http(DRIP_RPC_URL),
 });
 
-const TARGET_CHAIN_ID = 2124225178762456;
+const TARGET_CHAIN_ID = DRIP_CHAIN_ID;
 
 type VaultInfo = {
   name: string;
@@ -206,7 +207,7 @@ export default function VaultDetailPage() {
         <div className="flex flex-col gap-4 mb-12 border-b border-white/5 pb-8">
           <div className="flex flex-wrap items-center gap-3">
             <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-              evm-1 Testnet
+              Drip Rollup
             </span>
             <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md text-[10px] font-bold text-blue-400 uppercase tracking-widest">
               Verified

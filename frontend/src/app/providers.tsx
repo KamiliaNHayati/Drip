@@ -10,22 +10,13 @@ import {
   TESTNET 
 } from '@initia/interwovenkit-react';
 import interwovenKitStyles from '@initia/interwovenkit-react/styles.js';
-
-// Chain definition matching Initia docs example format
-const evm1Chain = {
-  id: 2124225178762456,
-  name: 'Initia evm-1',
-  nativeCurrency: { name: 'INIT', symbol: 'INIT', decimals: 18 },
-  rpcUrls: {
-    default: { http: ['https://jsonrpc-evm-1.anvil.asia-southeast.initia.xyz'] },
-  },
-} as const;
+import { drip1, DRIP_RPC_URL } from '@/lib/chain';
 
 const wagmiConfig = createConfig({
   connectors: [initiaPrivyWalletConnector],
-  chains: [evm1Chain],
+  chains: [drip1],
   transports: {
-    [evm1Chain.id]: http(),
+    [drip1.id]: http(DRIP_RPC_URL),
   },
   ssr: true,
 });
@@ -46,7 +37,7 @@ export function Providers({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiProvider config={wagmiConfig}>
-        <InterwovenKitProvider {...TESTNET} defaultChainId="evm-1" disableAnalytics>
+        <InterwovenKitProvider {...TESTNET} defaultChainId="drip-1" disableAnalytics>
           {children}
         </InterwovenKitProvider>
       </WagmiProvider>

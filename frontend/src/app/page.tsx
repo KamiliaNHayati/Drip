@@ -7,9 +7,10 @@ import VaultCard from '@/components/VaultCard';
 import BattleCard from '@/components/BattleCard';
 import Link from 'next/link';
 import { VaultFactoryABI, VaultFactoryAddress, DripVaultABI } from '@/lib/contracts';
+import { DRIP_RPC_URL } from '@/lib/chain';
 
 const publicClient = createPublicClient({
-  transport: http('https://jsonrpc-evm-1.anvil.asia-southeast.initia.xyz'),
+  transport: http(DRIP_RPC_URL),
 });
 
 type VaultData = {

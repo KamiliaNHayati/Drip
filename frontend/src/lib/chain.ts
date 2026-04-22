@@ -1,8 +1,12 @@
-export const evm1 = {
-  id: 2124225178762456,
-  name: 'Initia evm-1',
+// Chain configuration for Drip rollup (drip-1)
+export const DRIP_RPC_URL = 'http://localhost:8545' as const;
+export const DRIP_CHAIN_ID = 9786571 as const;
+
+export const drip1 = {
+  id: DRIP_CHAIN_ID,
+  name: 'Drip',
   nativeCurrency: { name: 'INIT', symbol: 'INIT', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://jsonrpc-evm-1.anvil.asia-southeast.initia.xyz'] },
+    default: { http: [DRIP_RPC_URL] },
   },
 } as const;

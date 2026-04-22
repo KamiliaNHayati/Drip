@@ -107,7 +107,7 @@ export default function DocsPage() {
                 Drip makes it social, competitive, and automatic.
               </div>
               <p className="leading-relaxed">
-                Drip is deployed as a self-contained EVM Minitia on the Initia testnet (evm-1).
+                Drip is deployed as its own EVM rollup (drip-1) on the Initia ecosystem.
                 All contracts are on-chain. No custodians, no keeper bots, no off-chain infrastructure required.
               </p>
             </section>
@@ -149,7 +149,7 @@ export default function DocsPage() {
 
               <h4 className="text-xl font-serif text-white mb-3 mt-8">Creating a vault</h4>
               <p className="leading-relaxed text-sm mb-6 text-zinc-400">
-                Any wallet can create a vault for <strong className="text-white">3 INIT</strong>. The creator sets
+                Any wallet can create a vault for <strong className="text-white">free</strong> (zero creation fee). The creator sets
                 their performance fee — a percentage of yield earned by all depositors in their
                 vault. This fee is auto-distributed to the creator each compound cycle.
                 Drip Protocol takes 10% of the creator's earnings.
@@ -290,7 +290,7 @@ export default function DocsPage() {
               </ul>
               <p className="leading-relaxed text-sm text-zinc-400">
                 The oracle is accessed via a precompile at
-                <code className="bg-white/10 text-white font-mono px-1.5 py-0.5 rounded ml-1">0x031ECb63480983FD216D17BB6e1d393f3816b72F</code> on the evm-1 Minitia.
+                <code className="bg-white/10 text-white font-mono px-1.5 py-0.5 rounded ml-1">0x031ECb63480983FD216D17BB6e1d393f3816b72F</code> on the drip-1 rollup.
               </p>
             </section>
 
@@ -440,7 +440,7 @@ const account = privateKeyToAccount('0xYourPrivateKey');
 
 const client = createWalletClient({
   account,
-  transport: http('https://jsonrpc-evm-1.anvil.asia-southeast.initia.xyz'),
+  transport: http('http://localhost:8545'),
 });
 
 // Call compound() every hour
@@ -515,7 +515,7 @@ setInterval(async () => {
                   <tbody className="divide-y divide-white/5">
                     <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-medium text-white">DripPool reserve factor</td><td className="px-6 py-4 text-zinc-400">10% of borrower interest</td><td className="px-6 py-4 text-zinc-400">Continuous</td></tr>
                     <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-medium text-white">Liquidation fee</td><td className="px-6 py-4 text-zinc-400">5% of debt</td><td className="px-6 py-4 text-zinc-400">Each liquidation</td></tr>
-                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-medium text-white">Vault creation</td><td className="px-6 py-4 text-zinc-400">3 INIT</td><td className="px-6 py-4 text-zinc-400">Each vault</td></tr>
+                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-medium text-white">Vault creation</td><td className="px-6 py-4 text-zinc-400">Free (0 fee)</td><td className="px-6 py-4 text-zinc-400">Each vault</td></tr>
                     <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-medium text-white">Drip cut of creator fee</td><td className="px-6 py-4 text-zinc-400">10% of creator earnings</td><td className="px-6 py-4 text-zinc-400">Each compound</td></tr>
                     <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-medium text-white">Competition entry</td><td className="px-6 py-4 text-zinc-400">7 INIT per participant</td><td className="px-6 py-4 text-zinc-400">Each entry</td></tr>
                     <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-medium text-white">Competition prize cut</td><td className="px-6 py-4 text-zinc-400">10% of prize pool</td><td className="px-6 py-4 text-zinc-400">Each settlement</td></tr>
@@ -561,7 +561,7 @@ setInterval(async () => {
             {/* ── Contracts ── */}
             <section id="contracts" className="scroll-mt-32">
               <h2 className="text-3xl font-serif font-medium text-white mb-6">Contract Addresses</h2>
-              <p className="leading-relaxed mb-6">Deployed on Initia evm-1 testnet (Chain ID: <code className="font-mono text-white">2124225178762456</code>)</p>
+              <p className="leading-relaxed mb-6">Deployed on Drip rollup (Chain ID: <code className="font-mono text-white">drip-1</code>)</p>
               
               <div className="bg-black/40 border border-white/10 rounded-2xl overflow-hidden mb-4">
                 <table className="w-full text-left text-sm">
@@ -572,20 +572,19 @@ setInterval(async () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5 font-mono text-xs">
-                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">DripPool</td><td className="px-6 py-4 text-zinc-300">0x2E97f225dcC77780bB62059668144F64dfF5eF04</td></tr>
-                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">VaultFactory</td><td className="px-6 py-4 text-zinc-300">0x9D8d7DbEccD15438111E0D162caf2BAF1C9B1D61</td></tr>
-                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">CompetitionManager</td><td className="px-6 py-4 text-zinc-300">0x519Bd4777f72d41dE47FD1490E099f12b46A2Cb5</td></tr>
-                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">BattleManager</td><td className="px-6 py-4 text-zinc-300">0xa44C796f39955daDbA335f990E44cACa412D596C</td></tr>
-                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">GhostRegistry</td><td className="px-6 py-4 text-zinc-300">0xdfCC740D3dD3a48802692B903a93f76A3774b1CA</td></tr>
-                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">SquadManager</td><td className="px-6 py-4 text-zinc-300">0x1680E051941DbD2BFBD7d310CBe1042e1FD8De25</td></tr>
+                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">DripPool</td><td className="px-6 py-4 text-zinc-300">0xBAFdF0273644d4f80A9f77718346Dc706Bbb36e6</td></tr>
+                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">VaultFactory</td><td className="px-6 py-4 text-zinc-300">0x1EbCF4ff378274DEA425f37670F787AEBdb7d0d0</td></tr>
+                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">CompetitionManager</td><td className="px-6 py-4 text-zinc-300">0xE92e218c2c0B186dB54E31867BC70bd1decBF472</td></tr>
+                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">BattleManager</td><td className="px-6 py-4 text-zinc-300">0x12c0D804b1dbAb9056fa1Ca44E24ad066bEA30a8</td></tr>
+                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">GhostRegistry</td><td className="px-6 py-4 text-zinc-300">0xBbb79Dd2ae4A71e5f57E71d650f6AD147C9727a1</td></tr>
+                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">SquadManager</td><td className="px-6 py-4 text-zinc-300">0x16427Da31d6dD50663b26D7D9ef339e719d7E9Dd</td></tr>
                     <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">Connect Oracle</td><td className="px-6 py-4 text-zinc-300">0x031ECb63480983FD216D17BB6e1d393f3816b72F</td></tr>
-                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">INIT ERC20 (evm-1)</td><td className="px-6 py-4 text-zinc-300">0x2eE7007DF876084d4C74685e90bB7f4cd7c86e22</td></tr>
+                    <tr className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-sans font-medium text-white">INIT ERC20</td><td className="px-6 py-4 text-zinc-300">0x042adD9e80f7a23Ab71D5e1d392af1d3928B7D05</td></tr>
                   </tbody>
                 </table>
               </div>
               <p className="text-zinc-500 text-sm">
-                All contracts are deployed and verified on the Initia evm-1 testnet.
-                View them on the <a href="https://scan.testnet.initia.xyz/evm-1" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors underline underline-offset-2">Initia Explorer</a>.
+                All contracts are deployed on the Drip rollup.
               </p>
             </section>
 
@@ -610,12 +609,12 @@ setInterval(async () => {
                   a frontend projection. Actual on-chain yield is not modified in V1.
                 </li>
                 <li>
-                  <strong className="text-white block mb-1">No cross-rollup strategies:</strong> vaults are confined to the evm-1
-                  Minitia. MilkyWay and Echelon integrations are planned post-hackathon.
+                  <strong className="text-white block mb-1">No cross-rollup strategies:</strong> vaults are confined to the drip-1
+                  rollup. MilkyWay and Echelon integrations are planned post-hackathon.
                 </li>
                 <li>
-                  <strong className="text-white block mb-1">Testnet only:</strong> all contracts are on the Initia testnet.
-                  Testnet INIT has no monetary value.
+                  <strong className="text-white block mb-1">Rollup environment:</strong> the drip-1 rollup runs via Weave CLI.
+                  Vault creation is free to reduce friction during the hackathon demo.
                 </li>
                 <li>
                   <strong className="text-white block mb-1">No audit:</strong> contracts have not been formally audited.

@@ -14,11 +14,11 @@ import {CompetitionManager} from "../src/CompetitionManager.sol";
 ///      IMPORTANT: Update the addresses below after running DeployAll.s.sol!
 contract Seed is Script {
     // ─── UPDATE THESE AFTER DEPLOYMENT ─────────────────────────────────
-    address constant POOL = 0x2E97f225dcC77780bB62059668144F64dfF5eF04;          // <-- UPDATE
-    address constant FACTORY = 0x9D8d7DbEccD15438111E0D162caf2BAF1C9B1D61;       // <-- UPDATE
-    address constant COMPETITION = 0x519Bd4777f72d41dE47FD1490E099f12b46A2Cb5;   // <-- UPDATE
+    address constant POOL = 0xBAFdF0273644d4f80A9f77718346Dc706Bbb36e6;          // <-- UPDATE
+    address constant FACTORY = 0x1EbCF4ff378274DEA425f37670F787AEBdb7d0d0;       // <-- UPDATE
+    address constant COMPETITION = 0xE92e218c2c0B186dB54E31867BC70bd1decBF472;   // <-- UPDATE
 
-    address constant INIT_TOKEN = 0x2eE7007DF876084d4C74685e90bB7f4cd7c86e22;
+    address constant INIT_TOKEN = 0x042adD9e80f7a23Ab71D5e1d392af1d3928B7D05;
 
     function run() external {
         require(POOL != address(0), "Update POOL address first!");

@@ -7,6 +7,7 @@ import { parseEther } from 'viem';
 import { useInterwovenKit } from '@initia/interwovenkit-react';
 
 import { VaultFactoryABI, VaultFactoryAddress } from '@/lib/contracts';
+import { DRIP_CHAIN_ID } from '@/lib/chain';
 
 export default function CreateVaultForm() {
   const router = useRouter();
@@ -48,8 +49,8 @@ export default function CreateVaultForm() {
     setError(null);
 
     try {
-      // Always switch to evm-1 before sending
-      const targetChainId = 2124225178762456;
+      // Always switch to drip-1 before sending
+      const targetChainId = DRIP_CHAIN_ID;
       try {
         await switchChainAsync({ chainId: targetChainId });
       } catch (switchErr) {
@@ -63,7 +64,7 @@ export default function CreateVaultForm() {
         abi: VaultFactoryABI,
         functionName: 'createVault',
         args: [name, description, BigInt(fee * 100)],
-        value: parseEther('3'),
+        value: BigInt(0),
       });
 
       console.log('Tx submitted:', hash);
@@ -173,7 +174,7 @@ export default function CreateVaultForm() {
       <div className="flex flex-col gap-4 mt-2">
         <div className="flex justify-between items-center px-5 py-4 bg-black/60 border border-white/5 rounded-xl border-dashed">
           <span className="text-sm font-semibold text-zinc-400 uppercase tracking-wide">Creation Cost</span>
-          <span className="text-xl font-mono font-bold text-white">3.0 <span className="text-sm text-zinc-500">INIT</span></span>
+          <span className="text-xl font-mono font-bold text-white">0 <span className="text-sm text-zinc-500">DRIP</span></span>
         </div>
 
         {error && (

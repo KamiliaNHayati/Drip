@@ -6,12 +6,13 @@ import { createPublicClient, http, formatEther } from 'viem';
 import { useInterwovenKit } from '@initia/interwovenkit-react';
 
 import { GhostRegistryABI, GhostRegistryAddress } from '@/lib/contracts';
+import { DRIP_RPC_URL, DRIP_CHAIN_ID } from '@/lib/chain';
 
 const publicClient = createPublicClient({
-  transport: http('https://jsonrpc-evm-1.anvil.asia-southeast.initia.xyz'),
+  transport: http(DRIP_RPC_URL),
 });
 
-const TARGET_CHAIN_ID = 2124225178762456;
+const TARGET_CHAIN_ID = DRIP_CHAIN_ID;
 
 type GhostStats = {
   compoundsExecuted: number;

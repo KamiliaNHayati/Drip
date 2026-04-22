@@ -16,7 +16,7 @@ import {SquadManager} from "../src/SquadManager.sol";
 /// @dev Run: forge script script/DeployAll.s.sol --rpc-url $RPC --account Initia1 --broadcast --via-ir
 contract DeployAll is Script {
     // ─── Constants ─────────────────────────────────────────────────────
-    address constant INIT_TOKEN = 0x2eE7007DF876084d4C74685e90bB7f4cd7c86e22;
+    address constant INIT_TOKEN = 0x042adD9e80f7a23Ab71D5e1d392af1d3928B7D05;
     address constant CONNECT_ORACLE = 0x031ECb63480983FD216D17BB6e1d393f3816b72F;
 
     // DripPool params
@@ -27,7 +27,7 @@ contract DeployAll is Script {
     uint256 constant COLLATERAL_FACTOR_BPS = 7500; // 75% LTV
 
     // VaultFactory params
-    uint256 constant CREATION_FEE = 3 ether;
+    uint256 constant CREATION_FEE = 0 ether;
     uint256 constant DRIP_CUT_BPS = 1000;         // 10%
 
     // CompetitionManager params
