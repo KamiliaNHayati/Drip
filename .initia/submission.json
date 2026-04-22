@@ -1,7 +1,7 @@
 {
   "project_name": "Drip",
   "repo_url": "https://github.com/KamiliaNHayati/Drip",
-  "commit_sha": "9179691dc2ed3856373098517b9390413ebad356",
+  "commit_sha": "3a6a2ee7d39d540d6ef0f4a49b2ed151fa9ab5fb",
   "rollup_chain_id": "drip-1",
   "deployed_address": "0x1EbCF4ff378274DEA425f37670F787AEBdb7d0d0",
   "vm": "evm",
