@@ -186,18 +186,6 @@ These are intentional trade-offs for hackathon scope:
 
 4. **Local rollup only:** The drip-1 rollup runs locally via Weave CLI. The gas token (udrip) cannot be swapped to/from INIT or other tokens in the current setup. Judges need to run the rollup locally to interact with the contracts.
 
-## 🗺️ Roadmap (Post-Hackathon V2)
-
-- [ ] Multi-asset collateral with Connect oracle price feeds
-- [ ] Flash loans in DripPool
-- [ ] On-chain squad yield multipliers
-- [ ] MilkyWay liquid staking integration
-- [ ] Echelon lending integration
-- [ ] Cross-rollup vault strategies via IBC
-- [ ] Automated ghost keeper bot SDK
-- [ ] Governance token and DAO treasury
-- [ ] `.init` username integration for vault names
-
 ## 🧪 Testing
 
 ```bash
