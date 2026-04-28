@@ -25,6 +25,21 @@ type VaultData = {
   created: number;
 };
 
+const mockVaults: VaultData[] = [
+  {
+    address: '0x1111111111111111111111111111111111111111',
+    name: 'Demo Vault',
+    creator: '0xabcd...1234',
+    tvl: '123',
+    tvlNum: 123,
+    apy: '8.0',
+    apyNum: 8,
+    isNew: true,
+    created: Date.now(),
+  },
+  // add 1–2 more if you want
+];
+
 export default function LandingPage() {
   const [sortBy, setSortBy] = useState<'tvl' | 'apy' | 'newest'>('tvl');
   const [vaultData, setVaultData] = useState<VaultData[]>([]);
@@ -77,7 +92,8 @@ export default function LandingPage() {
 
         setVaultData(vaults);
       } catch (err) {
-        console.error('Failed to fetch vaults:', err);
+        console.warn('RPC unavailable, using mock data', err);
+        setVaultData(mockVaults);
       } finally {
         setLoading(false);
       }

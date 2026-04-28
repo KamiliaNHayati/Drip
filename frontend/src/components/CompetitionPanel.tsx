@@ -22,11 +22,15 @@ interface CompetitionPanelProps {
 }
 
 export default function CompetitionPanel({ 
+  id,
+  entryFee,
+  isEntered,
+  canSettle,
   status, 
   participantCount, 
   endTime, 
   leaderboard,
-  currentUserAddress = '0x1234567890abcdef' // Mock for demo
+  currentUserAddress = '0x1234567890abcdef'
 }: CompetitionPanelProps) {
   
   // Format BPS to percentage (e.g., 425 -> "+4.25%")
