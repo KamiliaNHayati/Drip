@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <Image 
-              src="/logo.svg" 
+              src="/drip.svg" 
               alt="Drip Logo" 
               width={32} 
               height={32} 
