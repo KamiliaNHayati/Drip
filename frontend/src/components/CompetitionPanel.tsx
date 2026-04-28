@@ -10,6 +10,10 @@ interface Participant {
 }
 
 interface CompetitionPanelProps {
+  id?: string;           // add
+  entryFee?: string;     // add
+  isEntered?: boolean;   // add
+  canSettle?: boolean;   // add
   status: 'active' | 'upcoming' | 'settled';
   participantCount: number;
   endTime: string;
