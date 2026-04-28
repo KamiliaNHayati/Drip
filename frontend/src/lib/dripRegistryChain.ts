@@ -36,6 +36,7 @@ export function buildDripRegistryChain(): Chain {
       rpc: [{ address: tmRpc, provider: 'drip' }],
       rest: [{ address: rest, provider: 'drip' }],
       'json-rpc': [{ address: jsonRpc, provider: 'drip' }],
+      indexer: [{ address: rest, provider: 'drip' }],
     },
     metadata: {
       minitia: {
