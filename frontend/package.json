@@ -18,6 +18,7 @@
     "wagmi": "^2.17.2"
   },
   "devDependencies": {
+    "@initia/initia-registry-types": "^1.0.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

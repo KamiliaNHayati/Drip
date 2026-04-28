@@ -11,6 +11,7 @@ import {
 } from '@initia/interwovenkit-react';
 import interwovenKitStyles from '@initia/interwovenkit-react/styles.js';
 import { drip1, DRIP_RPC_URL } from '@/lib/chain';
+import { dripRegistryChain } from '@/lib/dripRegistryChain';
 
 const wagmiConfig = createConfig({
   connectors: [initiaPrivyWalletConnector],
@@ -37,7 +38,12 @@ export function Providers({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiProvider config={wagmiConfig}>
-        <InterwovenKitProvider {...TESTNET} defaultChainId="drip-1" disableAnalytics>
+        <InterwovenKitProvider
+          {...TESTNET}
+          defaultChainId="drip-1"
+          customChain={dripRegistryChain}
+          disableAnalytics
+        >
           {children}
         </InterwovenKitProvider>
       </WagmiProvider>
